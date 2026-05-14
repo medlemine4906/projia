@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  # ─── Data Warehouse PostgreSQL ───────────────────────────
+  datawarehouse:
+    image: postgres:15
+    container_name: dw_postgres
+    environment:
+      POSTGRES_DB: datawarehouse
+      POSTGRES_USER: dw_user
+      POSTGRES_PASSWORD: dw_pass123
+    ports:
+      - "5432:5432"
+    volumes:
+      - dw_data:/var/lib/postgresql/data
+      - ./scripts/init_dw.sql:/docker-entrypoint-initdb.d/init_dw.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dw_user -d datawarehouse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ─── pgAdmin (optionnel, interface web SQL Developer) ────
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: dw_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@dw.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8082:80"
+    depends_on:
+      - datawarehouse
+
+volumes:
+  dw_data:
