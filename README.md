@@ -1,5 +1,5 @@
 # 🎓 Partie Pratique — IA & Data Warehouse
-## Exposé M1 Informatique — 2024/2025
+## Exposé M1 Informatique — 2025/2026
 
 ---
 
